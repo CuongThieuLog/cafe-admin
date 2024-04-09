@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import {
   Box,
@@ -9,7 +9,7 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from '@mui/material'
+} from "@mui/material";
 import {
   PaginationState,
   flexRender,
@@ -18,22 +18,22 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table'
-import { RowData } from '@tanstack/table-core'
-import { Fragment, ReactElement, useState } from 'react'
-import { Pagination } from './Pagination'
-import { TableSkeleton } from './TableSkeleton'
-import { ReactTableProps } from './types'
+} from "@tanstack/react-table";
+import { RowData } from "@tanstack/table-core";
+import { Fragment, ReactElement, useState } from "react";
+import { Pagination } from "./Pagination";
+import { TableSkeleton } from "./TableSkeleton";
+import { ReactTableProps } from "./types";
 
 function ReactTable<T extends RowData>(
-  props: Omit<ReactTableProps<T>, 'getCoreRowModel'>,
+  props: Omit<ReactTableProps<T>, "getCoreRowModel">
 ): ReactElement {
-  const { columns, data, isLoading } = props
+  const { columns, data, isLoading } = props;
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
-  })
+  });
 
   const instance = useReactTable({
     columns,
@@ -49,29 +49,34 @@ function ReactTable<T extends RowData>(
       pagination,
     },
     // autoResetPageIndex: false, // turn off page index reset when sorting or filtering
-  })
+  });
 
   if (isLoading && !data.length) {
-    return <TableSkeleton />
+    return <TableSkeleton />;
   }
 
   if (data.length === 0)
     return (
-      <Stack direction="row" alignItems="center" justifyContent="center" height="60vh">
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="center"
+        height="60vh"
+      >
         <Typography>Không có dữ liệu</Typography>
       </Stack>
-    )
+    );
 
   const handleNextPage = () => {
-    setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex + 1 }))
-  }
+    setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex + 1 }));
+  };
 
   const handlePrevPage = () => {
-    setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex - 1 }))
-  }
+    setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex - 1 }));
+  };
 
-  const disabledPrev = pagination.pageIndex === 0
-  const disabledNext = pagination.pageIndex === instance.getPageCount() - 1
+  const disabledPrev = pagination.pageIndex === 0;
+  const disabledNext = pagination.pageIndex === instance.getPageCount() - 1;
 
   return (
     <Box mr={2}>
@@ -81,8 +86,17 @@ function ReactTable<T extends RowData>(
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <TableCell key={header.id}>
-                  <Typography variant="caption" fontWeight={700} width={100} textAlign="center">
-                    {flexRender(header.column.columnDef.header, header.getContext())}
+                  <Typography
+                    variant="caption"
+                    fontWeight={700}
+                    width={100}
+                    textAlign="center"
+                    color={"#D17842"}
+                  >
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
                   </Typography>
                 </TableCell>
               ))}
@@ -100,11 +114,19 @@ function ReactTable<T extends RowData>(
                       key={cell.id}
                       sx={{
                         fontSize: 14,
+                        maxWidth: 100,
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        color: "#000",
                       }}
                     >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
-                  )
+                  );
                 })}
               </TableRow>
             </Fragment>
@@ -119,7 +141,7 @@ function ReactTable<T extends RowData>(
         disabledPrev={disabledPrev}
       />
     </Box>
-  )
+  );
 }
 
-export { ReactTable }
+export { ReactTable };

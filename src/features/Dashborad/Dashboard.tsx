@@ -1,31 +1,31 @@
-'use client'
+"use client";
 
-import request from '@/libs/config/axios'
-import { Box, Stack, Typography } from '@mui/material'
-import { useQuery } from '@tanstack/react-query'
-import { IncomeType, ProfitType } from './type'
+import request from "@/libs/config/axios";
+import { Box, Stack, Typography } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { IncomeType, ProfitType } from "./type";
 
 const Dashboard = () => {
   const { data: income } = useQuery({
-    queryKey: ['income'],
+    queryKey: ["income"],
     queryFn: async () => {
-      const response = await request.get<IncomeType>('/order/income')
-      return response.data
+      const response = await request.get<IncomeType>("/order/income");
+      return response.data;
     },
-  })
+  });
 
   const { data: profit } = useQuery({
-    queryKey: ['profit'],
+    queryKey: ["profit"],
     queryFn: async () => {
-      const response = await request.get<ProfitType>('/order/profit')
-      return response.data
+      const response = await request.get<ProfitType>("/order/profit");
+      return response.data;
     },
-  })
+  });
 
   return (
     <Box>
       <Typography variant="h4" mb={3} fontWeight="bold">
-        Dashboard
+        Thống kê
       </Typography>
 
       <Stack direction="row" spacing={2}>
@@ -35,10 +35,10 @@ const Dashboard = () => {
           justifyContent="center"
           alignItems="center"
           sx={{
-            backgroundColor: 'rgba(53, 162, 235, 0.8)',
-            border: '2px solid rgb(53, 162, 235)',
-            color: 'white',
-            borderRadius: '8px',
+            backgroundColor: "rgba(53, 162, 235, 0.8)",
+            border: "2px solid rgb(53, 162, 235)",
+            color: "white",
+            borderRadius: "8px",
           }}
         >
           <Typography textAlign="center">Doanh thu</Typography>
@@ -54,10 +54,10 @@ const Dashboard = () => {
           justifyContent="center"
           alignItems="center"
           sx={{
-            backgroundColor: 'rgba(255, 99, 132, 0.8)',
-            border: '2px solid rgb(255, 99, 132)',
-            color: 'white',
-            borderRadius: '8px',
+            backgroundColor: "rgba(255, 99, 132, 0.8)",
+            border: "2px solid rgb(255, 99, 132)",
+            color: "white",
+            borderRadius: "8px",
           }}
         >
           <Typography textAlign="center">Lợi nhuận</Typography>
@@ -68,7 +68,7 @@ const Dashboard = () => {
         </Stack>
       </Stack>
     </Box>
-  )
-}
+  );
+};
 
-export { Dashboard }
+export { Dashboard };

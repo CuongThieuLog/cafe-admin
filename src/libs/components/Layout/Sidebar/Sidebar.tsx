@@ -1,45 +1,45 @@
-'use client'
+"use client";
 
-import { useAuth } from '@/libs/context'
-import { Box, IconButton, List, Stack, Typography } from '@mui/material'
-import { red } from '@mui/material/colors'
-import LogoutIcon from '@public/assets/svgs/logout.svg'
-import { commonText } from '@public/locales'
-import { useState } from 'react'
-import { Modal } from '../..'
-import { ListItemButton } from './ItemSidebar'
-import { useMenuList } from './useMenuList'
+import { useAuth } from "@/libs/context";
+import { Box, IconButton, List, Stack, Typography } from "@mui/material";
+import { red } from "@mui/material/colors";
+import LogoutIcon from "@public/assets/svgs/logout.svg";
+import { commonText } from "@public/locales";
+import { useState } from "react";
+import { Modal } from "../..";
+import { ListItemButton } from "./ItemSidebar";
+import { useMenuList } from "./useMenuList";
 
-const SIDE_BAR_WIDTH = 250
+const SIDE_BAR_WIDTH = 250;
 
 const Sidebar = () => {
-  const { menus } = useMenuList()
-  const [open, setOpen] = useState(false)
-  const handleOpenModal = () => setOpen(true)
-  const handleCloseModal = () => setOpen(false)
-  const { admin, loading, handleLogout } = useAuth()
-  const { cancel, confirm, content, title } = commonText.modal.logout
+  const { menus } = useMenuList();
+  const [open, setOpen] = useState(false);
+  const handleOpenModal = () => setOpen(true);
+  const handleCloseModal = () => setOpen(false);
+  const { admin, loading, handleLogout } = useAuth();
+  const { cancel, confirm, content, title } = commonText.modal.logout;
 
   return (
     <Box
       sx={{
         width: SIDE_BAR_WIDTH,
-        display: { xs: 'none', md: 'block' },
+        display: { xs: "none", md: "block" },
       }}
     >
       <Box
         sx={{
-          position: 'fixed',
+          position: "fixed",
           width: SIDE_BAR_WIDTH,
-          height: '100%',
+          height: "100%",
           borderRight: (theme) => `1px solid ${theme.palette.greyScale[300]}`,
         }}
       >
         <List
           sx={{
-            width: '100%',
+            width: "100%",
             maxWidth: 360,
-            bgcolor: 'background.paper',
+            bgcolor: "background.paper",
             px: 2,
             py: 3.25,
           }}
@@ -59,7 +59,7 @@ const Sidebar = () => {
           height={151}
           alignItems="center"
           position="absolute"
-          bgcolor={red[500]}
+          bgcolor={"#D17842"}
           justifyContent="center"
         >
           <Stack direction="row">
@@ -81,7 +81,7 @@ const Sidebar = () => {
               </Typography>
             </Stack>
 
-            <IconButton sx={{ padding: '20px' }} onClick={handleOpenModal}>
+            <IconButton sx={{ padding: "20px" }} onClick={handleOpenModal}>
               <LogoutIcon />
             </IconButton>
           </Stack>
@@ -109,7 +109,7 @@ const Sidebar = () => {
         />
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export { Sidebar }
+export { Sidebar };

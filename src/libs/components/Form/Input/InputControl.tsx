@@ -1,18 +1,18 @@
-'use client'
+"use client";
 
-import { FormControl, FormControlProps, Typography } from '@mui/material'
-import { memo } from 'react'
-import type { FieldError } from 'react-hook-form'
-import { FormHelperText } from './FormHelperText'
-import { FormLabel } from './FormLabel'
+import { FormControl, FormControlProps, Typography } from "@mui/material";
+import { memo } from "react";
+import type { FieldError } from "react-hook-form";
+import { FormHelperText } from "./FormHelperText";
+import { FormLabel } from "./FormLabel";
 
 export type AddControlProps = {
-  helperText?: string | JSX.Element
-  label?: string
-  fieldError?: FieldError | boolean
-}
+  helperText?: string | JSX.Element;
+  label?: string;
+  fieldError?: FieldError | boolean;
+};
 
-export type InputControlProps = FormControlProps<'div', AddControlProps>
+export type InputControlProps = FormControlProps<"div", AddControlProps>;
 
 function RawInputControl({
   fieldError,
@@ -34,7 +34,7 @@ function RawInputControl({
                 ml={0.5}
                 variant="body2"
                 component="span"
-                sx={{ color: 'red !important' }}
+                sx={{ color: "red !important" }}
               >
                 *
               </Typography>
@@ -49,14 +49,16 @@ function RawInputControl({
 
       {!!fieldError && (
         <FormHelperText error>
-          {typeof fieldError === 'object' ? fieldError.message : fieldError}
+          {typeof fieldError === "object" ? fieldError.message : fieldError}
         </FormHelperText>
       )}
-      {helperText && <FormHelperText error={false}>{helperText}</FormHelperText>}
+      {helperText && (
+        <FormHelperText error={false}>{helperText}</FormHelperText>
+      )}
     </FormControl>
-  )
+  );
 }
 
-const InputControl = memo(RawInputControl) as typeof RawInputControl
+const InputControl = memo(RawInputControl) as typeof RawInputControl;
 
-export { InputControl }
+export { InputControl };

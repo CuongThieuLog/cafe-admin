@@ -1,14 +1,14 @@
-import { Button, Stack, styled } from '@mui/material'
-import PaginationLeftIcon from '@public/assets/svgs/left.svg'
-import PaginationRight from '@public/assets/svgs/right.svg'
-import React from 'react'
+import { Button, Stack, styled } from "@mui/material";
+import PaginationLeftIcon from "@public/assets/svgs/left.svg";
+import PaginationRight from "@public/assets/svgs/right.svg";
+import React from "react";
 
 type PaginationPropsType = {
-  handleNextPage: () => void
-  handlePrevPage: () => void
-  disabledPrev?: boolean
-  disabledNext?: boolean
-}
+  handleNextPage: () => void;
+  handlePrevPage: () => void;
+  disabledPrev?: boolean;
+  disabledNext?: boolean;
+};
 
 const Pagination: React.FC<PaginationPropsType> = ({
   handleNextPage,
@@ -22,34 +22,30 @@ const Pagination: React.FC<PaginationPropsType> = ({
         onClick={handlePrevPage}
         startIcon={<PaginationLeftIcon />}
         disabled={disabledPrev}
-      >
-        Trước
-      </PaginationButton>
+      ></PaginationButton>
 
       <PaginationButton
         onClick={handleNextPage}
         endIcon={<PaginationRight />}
         disabled={disabledNext}
-      >
-        Sau
-      </PaginationButton>
+      ></PaginationButton>
     </Stack>
-  )
-}
+  );
+};
 
-export { Pagination }
+export { Pagination };
 
 const PaginationButton = styled(Button)(({ theme }) => ({
-  padding: '2px 10px',
+  padding: "2px 10px",
   borderRadius: 0,
   minWidth: 0,
   fontSize: 14,
   backgroundColor: theme.palette.base.white,
   color: theme.palette.base.black,
-  '&:hover': {
+  "&:hover": {
     backgroundColor: theme.palette.base.white,
   },
-  '&:focus': {
+  "&:focus": {
     backgroundColor: theme.palette.base.white,
   },
-}))
+}));
