@@ -22,10 +22,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { DialogCreate } from "./DialogCreate";
 import { useState } from "react";
+import { DialogDetail } from "./DialogDetail";
 
 const Product = () => {
-  const router = useRouter();
-
   const columnHelper = createColumnHelper<ProductType>();
   const [openDetail, setOpenDetail] = useState<boolean>(false);
   const [openEdit, setOpenEdit] = useState<boolean>(false);
@@ -175,6 +174,23 @@ const Product = () => {
       <ReactTable columns={columns} data={data || []} isLoading={isLoading} />
       {openCreate && (
         <DialogCreate open={openCreate} close={closeCreate} refetch={refetch} />
+      )}
+
+      {openEdit && (
+        <DialogCreate
+          open={openEdit}
+          close={closeEdit}
+          refetch={refetch}
+          productId={idCategory}
+        />
+      )}
+
+      {openDetail && (
+        <DialogDetail
+          categoryId={idCategory}
+          open={openDetail}
+          close={closeDetail}
+        />
       )}
     </>
   );

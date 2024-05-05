@@ -107,7 +107,7 @@ function ReactTable<T extends RowData>(
         <TableBody>
           {instance.getRowModel().rows.map((row) => (
             <Fragment key={row.id}>
-              <TableRow>
+              <TableRow sx={{ height: 100 }}>
                 {row.getVisibleCells().map((cell) => {
                   return (
                     <TableCell

@@ -1,126 +1,140 @@
-'use client'
+"use client";
 
-import { Input } from '@/libs/components'
-import { ReactTable } from '@/libs/components/Table'
-import request from '@/libs/config/axios'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Stack } from '@mui/material'
-import EditIcon from '@public/assets/svgs/edit.svg'
-import TrashIcon from '@public/assets/svgs/trash.svg'
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
-import { createColumnHelper } from '@tanstack/react-table'
-import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
-import { ProductListType, ProductSchema, ProductSearchType, ProductType } from '../Product'
-import { ButtonEdit } from '../Product/styled'
+import { Input } from "@/libs/components";
+import { ReactTable } from "@/libs/components/Table";
+import request from "@/libs/config/axios";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Stack } from "@mui/material";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { createColumnHelper } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import EditIcon from "@mui/icons-material/Edit";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import {
+  ProductListType,
+  ProductSchema,
+  ProductSearchType,
+  ProductType,
+} from "../Product";
+import { ButtonEdit } from "../Product/styled";
+import { useState } from "react";
+import { OrderListType, Root } from "./type";
+import { DialogCreate } from "./DialogCreate";
 
 const Order = () => {
-  const router = useRouter()
+  const router = useRouter();
 
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient();
 
-  const { mutate: deleteProduct } = useMutation({
-    mutationFn: async (id: string) => {
-      const response = await request.delete(`/product/${id}`)
-      return response.data
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries()
-    },
-  })
+  const [openDetail, setOpenDetail] = useState<boolean>(false);
+  const [openEdit, setOpenEdit] = useState<boolean>(false);
+  const [openCreate, setOpenCreate] = useState<boolean>(false);
+  const [idCategory, setIdCategory] = useState<string | null>(null);
 
-  const columnHelper = createColumnHelper<ProductType>()
+  const handleRowClickDetail = (categoryId: string) => {
+    setIdCategory(categoryId);
+    setOpenDetail(true);
+  };
+
+  const handleRowClickUpdate = (categoryId: string) => {
+    setIdCategory(categoryId);
+    setOpenEdit(true);
+  };
+
+  const handleRowClickCreate = () => {
+    setOpenCreate(true);
+  };
+
+  const closeDetail = () => {
+    setOpenDetail(false);
+  };
+
+  const closeEdit = () => {
+    setOpenEdit(false);
+  };
+
+  const closeCreate = () => {
+    setOpenCreate(false);
+  };
+
+  const columnHelper = createColumnHelper<Root>();
+
+  // ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELED"]
 
   const columns = [
-    columnHelper.accessor('_id', {
-      header: () => 'ID',
+    columnHelper.accessor("_id", {
+      header: () => "ID",
     }),
-    columnHelper.accessor('name', {
-      header: () => 'Tên sản phẩm',
+    columnHelper.accessor("products.product.name", {
+      header: () => "Tên sản phẩm",
+      cell: (info) =>
+        info.row.original.products.map((item, index) => (
+          <span key={index}>{item.product.name}</span>
+        )),
     }),
-    columnHelper.accessor('price', {
-      header: () => 'Giá sản phẩm',
+    columnHelper.accessor("products.quantity", {
+      header: () => "Số lượng",
     }),
-    columnHelper.accessor('description', {
-      header: () => 'Mô tả sản phẩm',
+    columnHelper.accessor("products.price", {
+      header: () => "Giá sản phẩm",
+      cell: (info) => <span>{info.row.original.products[0].price}</span>,
     }),
-    columnHelper.accessor('image', {
-      header: () => 'Hình ảnh sản phẩm',
-      cell: (info) => <img src={info.row.original.image} alt="product" width={50} height={50} />,
+    columnHelper.accessor("shippingAddress", {
+      header: () => "Địa chỉ giao hàng",
     }),
-    columnHelper.accessor('_id', {
-      id: 'action',
-      header: '',
+    columnHelper.accessor("status", {
+      header: () => "Trạng thái",
+    }),
+    columnHelper.accessor("_id", {
+      id: "action",
+      header: "",
       cell: (info) => (
         <Stack direction="row" alignItems="center" spacing={3.5}>
           <ButtonEdit
-            onClick={() => {
-              deleteProduct(info.getValue())
-            }}
+            onClick={() => handleRowClickUpdate(info.getValue())}
+            sx={{ color: "red" }}
           >
-            <TrashIcon />
-          </ButtonEdit>
-
-          <ButtonEdit onClick={() => router.push(`/product/update/${info.getValue()}`)}>
             <EditIcon />
           </ButtonEdit>
         </Stack>
       ),
     }),
-  ]
+  ];
 
   const { control, handleSubmit, watch } = useForm<ProductSearchType>({
     defaultValues: {
-      name: '',
+      name: "",
     },
     resolver: zodResolver(ProductSchema),
-  })
+  });
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryFn: async () => {
-      if (!watch('name')) {
-        const response = await request.get<ProductListType>('/product')
-        return response.data.data
+      if (!watch("name")) {
+        const response = await request.get<OrderListType>("/order");
+        return response.data.data;
       }
 
-      const response = await request.get<ProductListType>('/order')
-      return response.data.data
+      const response = await request.get<OrderListType>("/order");
+      return response.data.data;
     },
-    queryKey: ['order', watch('name')],
-  })
+    queryKey: ["order", watch("name")],
+  });
 
   return (
     <>
-      <Stack direction="row" justifyContent="flex-end" spacing={2} height={34} mb="3px">
-        {/* <ButtonCreate
-          variant="outlined"
-          startIcon={<CreateIcon />}
-          onClick={() => router.push('/order/create')}
-        >
-          Tạo mới
-        </ButtonCreate> */}
-      </Stack>
-
-      <Stack direction="row" spacing={4} component="form" mb={4}>
-        <Stack direction="row" spacing={2}>
-          <Input
-            control={control}
-            name="name"
-            label="Tên đơn hàng"
-            controlProps={{ sx: { label: { fontWeight: 500, marginBottom: 0, fontSize: 12 } } }}
-            sx={{
-              width: 143,
-              '& .MuiOutlinedInput-input': {
-                fontSize: 12,
-                height: 14,
-              },
-            }}
-          />
-        </Stack>
-      </Stack>
-
       <ReactTable columns={columns} data={data || []} isLoading={isLoading} />
+
+      {openEdit && (
+        <DialogCreate
+          close={closeEdit}
+          open={openEdit}
+          orderId={idCategory}
+          refetch={refetch}
+        />
+      )}
     </>
-  )
-}
-export { Order }
+  );
+};
+export { Order };
