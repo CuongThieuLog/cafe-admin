@@ -20,11 +20,43 @@ import { ButtonCreate, ButtonEdit } from "./styled";
 
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { DialogCreate } from "./DialogCreate";
+import { useState } from "react";
 
 const Product = () => {
   const router = useRouter();
 
   const columnHelper = createColumnHelper<ProductType>();
+  const [openDetail, setOpenDetail] = useState<boolean>(false);
+  const [openEdit, setOpenEdit] = useState<boolean>(false);
+  const [openCreate, setOpenCreate] = useState<boolean>(false);
+  const [idCategory, setIdCategory] = useState<string | null>(null);
+
+  const handleRowClickDetail = (categoryId: string) => {
+    setIdCategory(categoryId);
+    setOpenDetail(true);
+  };
+
+  const handleRowClickUpdate = (categoryId: string) => {
+    setIdCategory(categoryId);
+    setOpenEdit(true);
+  };
+
+  const handleRowClickCreate = () => {
+    setOpenCreate(true);
+  };
+
+  const closeDetail = () => {
+    setOpenDetail(false);
+  };
+
+  const closeEdit = () => {
+    setOpenEdit(false);
+  };
+
+  const closeCreate = () => {
+    setOpenCreate(false);
+  };
 
   const columns = [
     columnHelper.accessor("name", {
@@ -60,14 +92,14 @@ const Product = () => {
         <Stack direction="row" alignItems="center" spacing={3.5}>
           <ButtonEdit
             onClick={() => {
-              router.push(`/product/detail/${info.getValue()}`);
+              handleRowClickDetail(info.getValue());
             }}
           >
             <VisibilityIcon />
           </ButtonEdit>
 
           <ButtonEdit
-            onClick={() => router.push(`/product/update/${info.getValue()}`)}
+            onClick={() => handleRowClickUpdate(info.getValue())}
             sx={{ color: "red" }}
           >
             <EditIcon />
@@ -84,7 +116,7 @@ const Product = () => {
     resolver: zodResolver(ProductSchema),
   });
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryFn: async () => {
       if (!watch("name")) {
         const response = await request.get<ProductListType>("/product");
@@ -108,7 +140,7 @@ const Product = () => {
           variant="outlined"
           endIcon={<ArrowForwardIcon />}
           sx={{ width: 140 }}
-          onClick={() => router.push("/product/create")}
+          onClick={handleRowClickCreate}
         >
           Tạo mới
         </ButtonCreate>
@@ -141,6 +173,9 @@ const Product = () => {
       </Stack>
 
       <ReactTable columns={columns} data={data || []} isLoading={isLoading} />
+      {openCreate && (
+        <DialogCreate open={openCreate} close={closeCreate} refetch={refetch} />
+      )}
     </>
   );
 };
